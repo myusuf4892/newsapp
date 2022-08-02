@@ -27,3 +27,12 @@ func (repo *mysqlUserRepository) Insert(dataReq users.Core) (err error) {
 	}
 	return nil
 }
+
+func (repo *mysqlUserRepository) FindUser(email string) (response users.Core, err error) {
+	dataUser := User{}
+	srv := repo.db.Where("email = ?", email).Find(&dataUser)
+	if srv.Error != nil {
+		return users.Core{}, errors.New("no data user")
+	}
+	return dataUser.toCore(), nil
+}

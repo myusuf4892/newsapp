@@ -8,13 +8,12 @@ import (
 )
 
 func New(presenter _factory.Presenter) *echo.Echo {
-
 	e := echo.New()
 	e.Pre(_middlewares.RemoveTrailingSlash())
 
 	e.Use(_middlewares.CorsMiddleware())
 
-	e.POST("/users", presenter.UserPresenter.Create)
+	e.POST("/register", presenter.UserPresenter.Create)
 
 	return e
 }

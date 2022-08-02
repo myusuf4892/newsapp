@@ -2,8 +2,9 @@ package presentation
 
 import (
 	_helper "news/app/helper"
-	_request "news/features/presentation/request"
 	"news/features/users"
+	_request "news/features/users/delivery/request"
+	_response "news/features/users/delivery/response"
 
 	"github.com/labstack/echo/v4"
 )
@@ -32,4 +33,24 @@ func (h *UserHandler) Create(c echo.Context) error {
 		c.JSON(_helper.ResponseInternalServerError("failed insert data user"))
 	}
 	return c.JSON(_helper.ResponseCreateSuccess("success insert data user"))
+}
+
+func (h *UserHandler) Login(c echo.Context) error {
+	dataReq := _request.User{}
+	errBind := c.Bind(&dataReq)
+	if errBind != nil {
+		c.JSON(_helper.ResponseBadRequest("check your input data"))
+	}
+
+	dataCore := _request.ToCore(dataReq)
+
+	token, fullName, userID, err := h.userBusiness.Auth(dataCore)
+	if err != nil {
+		return c.JSON(_helper.ResponseNotFound(err.Error()))
+	}
+
+	result := _response.ToResponse(token, fullName, userID)
+
+	return c.JSON(_helper.ResponseStatusOkWithData("login success", result))
+
 }
