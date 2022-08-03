@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"errors"
 	"news/features/users"
 
@@ -19,10 +20,17 @@ func NewUserRepository(conn *gorm.DB) users.Data {
 
 func (repo *mysqlUserRepository) Insert(dataReq users.Core) (err error) {
 	data := fromCore(dataReq)
+	var newError map[string]interface{}
 
 	srv := repo.db.Create(&data)
 
 	if srv.Error != nil {
+		errByte, _ := json.Marshal(srv.Error)
+		json.Unmarshal((errByte), &newError)
+
+		if newError["Number"] == float64(1062) {
+			return errors.New("email already used")
+		}
 		return errors.New("error server")
 	}
 	return nil

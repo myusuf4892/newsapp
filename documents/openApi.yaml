@@ -1,0 +1,277 @@
+openapi: 3.0.0
+info:
+  version: "1.0"
+  title: "NewsApp"
+  description: "NewsApp open API"
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/myusuf4892/newsapp/1.0
+tags:
+  - name: Login
+    description: Authentication
+  - name: Register
+    description: Register
+  - name: Post
+    description: Posting articles, opini, etc
+paths:
+  #############################
+  #           LOGIN           #
+  #############################
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Login user
+      description: login user description
+      requestBody:
+        $ref: "#/components/requestBodies/loginRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/loginResponseSuccess"
+        "400":
+          $ref: "#/components/responses/loginResponseFailed"
+  #############################
+  #         REGISTER          #
+  #############################
+  /register:
+    post:
+      tags:
+        - Register
+      summary: Register user
+      description: register user description
+      requestBody:
+        $ref: "#/components/requestBodies/registerRequestBody"
+      responses:
+        "201":
+          $ref: "#/components/responses/registerResponseSuccess"
+        "400":
+          $ref: "#/components/responses/registerResponseFailed"
+#############################
+#        COMPONENTS         #
+#############################
+
+components:
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "use Token"
+
+  #############################
+  #          SCHEMAS          #
+  #############################
+  schemas:
+    requestLogin:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+    responseLoginSuccess:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        status:
+          type: string
+        data:
+          type: object
+    failedResponseLogin:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        status:
+          type: string
+    requestRegister:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+    responseRegisterSuccess:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        status:
+          type: string
+    failedResponseRegister:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        status:
+          type: string
+    responseWithData:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        currentTime:
+          type: string
+        data:
+          type: object
+    failedResponse:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+    responseWithNoData:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+  #############################
+  #      REQUEST BODIES       #
+  #############################
+  requestBodies:
+    loginRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestLogin"
+          examples:
+            userData:
+              description: data user for login
+              value:
+                email: user@gmail.com
+                password: password123
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/requestLogin"
+    registerRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestRegister"
+          examples:
+            userData:
+              description: data user for register
+              value:
+                name: Budi Setiawan
+                email: budi@gmail.com
+                password: inibudi
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/requestRegister"
+
+  #############################
+  #         RESPONSES         #
+  #############################
+  responses:
+    loginResponseSuccess:
+      description: login success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseLoginSuccess"
+          examples:
+            responseData:
+              description: response success
+              value:
+                code: 200
+                message: Login Success
+                data:
+                  id: 1
+                  role: user
+                  token: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co
+    loginResponseFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            Code: 400
+            Message: Email or Password Incorrect
+    registerResponseSuccess:
+      description: register success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseRegisterSuccess"
+          examples:
+            responseData:
+              description: response success
+              value:
+                code: 200
+                message: Register Success
+    registerResponseFailed:
+      description: register failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          examples:
+            Invalid Name:
+              $ref: "#/components/examples/invalidName"
+            Invalid Email:
+              $ref: "#/components/examples/invalidEmail"
+            Invalid Password:
+              $ref: "#/components/examples/invalidPassword"
+            All Data Not Filled:
+              $ref: "#/components/examples/allDataNotFilled"
+
+  #############################
+  #         EXAMPLES          #
+  #############################
+  examples:
+    responseFailed:
+      description: create failed
+      value:
+        code: 400
+        message: create failed
+    invalidName:
+      description: invalid Name
+      value:
+        code: 400
+        message: invalid name
+    invalidEmail:
+      description: invalid Email
+      value:
+        code: 400
+        message: invalid email
+    invalidPassword:
+      description: invalid password
+      value:
+        code: 400
+        message: invalid password
+    allDataNotFilled:
+      description: all data not filled
+      value:
+        code: 400
+        message: all data must be filled

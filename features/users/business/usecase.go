@@ -19,11 +19,25 @@ func NewUserBusiness(dataUser users.Data) users.Business {
 }
 
 func (uc *userUseCase) AddUser(dataReq users.Core) (err error) {
+	if dataReq.FullName == "" || dataReq.Phone == "" || dataReq.Email == "" || dataReq.Password == "" {
+		return errors.New("all data must be filled")
+	}
+
+	errEmailFormat := emailFormatValidation(dataReq.Email)
+	if errEmailFormat != nil {
+		return errors.New(errEmailFormat.Error())
+	}
+
+	passWillBcrypt := []byte(dataReq.Password)
+	hash, _ := bcrypt.GenerateFromPassword(passWillBcrypt, bcrypt.DefaultCost)
+
+	dataReq.Password = string(hash)
+
 	res := uc.userData.Insert(dataReq)
 	if res != nil {
 		return errors.New("error server")
 	}
-	return res
+	return nil
 }
 
 func (uc *userUseCase) Auth(dataReq users.Core) (token, fullName string, userID int, err error) {

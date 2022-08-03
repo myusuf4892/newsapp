@@ -1,6 +1,7 @@
 package presentation
 
 import (
+	"fmt"
 	_helper "news/app/helper"
 	"news/features/users"
 	_request "news/features/users/delivery/request"
@@ -30,7 +31,7 @@ func (h *UserHandler) Create(c echo.Context) error {
 
 	response := h.userBusiness.AddUser(dataCore)
 	if response != nil {
-		c.JSON(_helper.ResponseInternalServerError("failed insert data user"))
+		return c.JSON(_helper.ResponseBadRequest(response.Error()))
 	}
 	return c.JSON(_helper.ResponseCreateSuccess("success insert data user"))
 }
@@ -43,6 +44,7 @@ func (h *UserHandler) Login(c echo.Context) error {
 	}
 
 	dataCore := _request.ToCore(dataReq)
+	fmt.Println(dataCore)
 
 	token, fullName, userID, err := h.userBusiness.Auth(dataCore)
 	if err != nil {

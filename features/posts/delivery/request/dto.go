@@ -3,9 +3,9 @@ package request
 import "news/features/posts"
 
 type Post struct {
-	Tittle      string
-	Description string
-	PostTypeID  int
+	Tittle      string `json:"tittle" form:"tittle"`
+	Description string `json:"description" form:"description"`
+	PostTypeID  int    `json:"post_type_id" form:"post_type_id"`
 }
 
 func ToCore(dataReq Post) posts.Core {

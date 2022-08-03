@@ -7,9 +7,17 @@ type Core struct {
 	Tittle      string
 	Description string
 	PostTypeID  int
+	UserID      int
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	PostType    PostType
 	User        User
+}
+
+type PostType struct {
+	ID       int
+	Category string
+	Type     string
 }
 
 type User struct {
@@ -20,9 +28,15 @@ type User struct {
 }
 
 type Business interface {
-	AddArticles(dataArticles Core) (err error)
+	AddPost(dataPost Core) (err error)
+	GetPost() (dataPost []Core, err error)
+	UpdatePost(dataPost Core, ID int) (err error)
+	DestroyPost(ID int) (err error)
 }
 
 type Data interface {
-	Insert(dataArticles Core) (err error)
+	Insert(dataPost Core) (err error)
+	Get() (dataPost []Core, err error)
+	Update(dataPost Core, ID int) (err error)
+	Destroy(ID int) (err error)
 }
