@@ -8,69 +8,32 @@ News app can posting articles for media.
 
 Features in News App :
 
-### <summary>USERS</summary>
-
-<!---
-
-  | Command | Description |
-
-| --- | --- |
-
-  --->
+### USERS
 
 At users, there are features for login either user or admin, we also make CRUD for the user here
 
-<div>
-<details>
+
 | Feature User | Endpoint | Param | JWT Token | Function |
-
-| ------------ | -------- | ----- | --------- | -------- |
-
+| :---: | --- | :---: | :---: | --- |
 | POST | /register  | - | NO | new account registration |
-
-| POST | /login | - | NO | login for user/admin |
-
-</details>
-</div>
+| POST | /login | - | NO | login for user |
 
 <br>
 
-### <summary>POSTS</summary>
-
-<!---
-
-  | Command | Description |
-
-| --- | --- |
-
-  --->
+### POSTS
 
 At posts, we can be posting articles by user. so, you must be register and login, before posting article.
 
-<div>
-<details>
 | Feature Post | Endpoint | Param | JWT Token | Function |
-
-| ------------ | -------- | ----- | --------- | -------- |
-
+| :---: | --- | :---: | :---: | --- |
 | POST | /posts | - | YES | create posting |
-
 | GET | /posts | - | YES | get posts |
-
 | PUT | /posts/id | id: post_id | YES | update post |
-
 | DELETE | /posts/id | id: post_id | YES | delete post |
-
 | POST | /posts/categories | - | YES | create post type |
-
 | GET | /posts/categories | - | YES | get post type |
-
 | PUT | /posts/categories/id | id: post_type_id | YES | update post type |
-
 | DELETE | /posts/categories/id | id: post_type_id | YES | delete post type |
-
-</details>
-</div>
 
 <br>
 
@@ -112,6 +75,23 @@ cd newsapp
 
 ```
 
+Run aplication
+
+```bash
+
+go run main.go
+
+```
+
+Go test aplication
+
+```bash
+
+chmod 777 ./test.sh
+go test ./test.sh
+
+```
+
 ## Open Api
 
 if you want to consume our api,
@@ -119,9 +99,7 @@ if you want to consume our api,
 here's the way !
 
 ```bash
-
-https://app.swaggerhub.com/apis/myusuf4892/newsapp/1.0
-
+https://app.swaggerhub.com/apis-docs/myusuf4892/newsapp/1.0#/
 ```
 
 ## Authors

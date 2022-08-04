@@ -12,7 +12,7 @@ tags:
     description: Authentication
   - name: Register
     description: Register
-  - name: Post
+  - name: Posting
     description: Posting articles, opini, etc
 paths:
   #############################
@@ -47,15 +47,75 @@ paths:
           $ref: "#/components/responses/registerResponseSuccess"
         "400":
           $ref: "#/components/responses/registerResponseFailed"
+
+  #############################
+  #         POST_TYPE         #
+  #############################
+  /posts/categories:
+    post:
+      tags:
+        - Posting
+      summary: Create Post Type
+      description: create post type or category articles
+      security:
+        - JWTAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/postTypeRequestBody"
+      responses:
+        "201":
+          $ref: "#/components/responses/postTypeResponseSuccess"
+        "400":
+          $ref: "#/components/responses/postTypeResponseFailed"
+    get:
+      tags:
+        - Posting
+      summary: Get Post Type
+      description: get post type or category articles
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/getPostTypeResponseSuccess"
+        "400":
+          $ref: "#/components/responses/getPostTypeResponseFailed"
+  /posts/categories/{post_type_id}:
+    put:
+      tags:
+        - Posting
+      summary: Update Post Type
+      description: update post type or category articles
+      parameters:
+        - $ref: "#/components/parameters/post_type_id"
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/putPostTypeResponseSuccess"
+        "400":
+          $ref: "#/components/responses/putPostTypeResponseFailed"
+    delete:
+      tags:
+        - Posting
+      summary: Delete Post Type
+      description: delete post type or category articles
+      parameters:
+        - $ref: "#/components/parameters/post_type_id"
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/deletePostTypeResponseSuccess"
+        "400":
+          $ref: "#/components/responses/deletePostTypeResponseFailed"
   #############################
   #           POST            #
   #############################
   /posts:
     post:
       tags:
-        - Post
+        - Posting
       summary: Posting Article
-      description: posting by user
+      description: create posting by user
       security:
         - JWTAuth: []
       requestBody:
@@ -67,14 +127,45 @@ paths:
           $ref: "#/components/responses/postingResponseFailed"
     get:
       tags:
-        - Post
+        - Posting
       summary: Get Articles
-      description: get posting
+      description: get posting by user
       security:
         - JWTAuth: []
       responses:
         "200":
           $ref: "#/components/responses/getPostingResponses"
+        "400":
+          $ref: "#/components/responses/getPostingResponsesFailed"
+  /posts/{post_id}:
+    put:
+      tags:
+        - Posting
+      summary: Update Article
+      description: update posting by user
+      parameters:
+        - $ref: "#/components/parameters/post_id"
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/putPostingResponseSuccess"
+        "400":
+          $ref: "#/components/responses/putPostingResponseFailed"
+    delete:
+      tags:
+        - Posting
+      summary: Delete Article
+      description: delete posting by user
+      parameters:
+        - $ref: "#/components/parameters/post_id"
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/deletePostingResponseSuccess"
+        "400":
+          $ref: "#/components/responses/deletePostingResponseFailed"
 #############################
 #        COMPONENTS         #
 #############################
@@ -114,15 +205,6 @@ components:
           type: string
         data:
           type: object
-    failedResponseLogin:
-      type: object
-      properties:
-        code:
-          type: number
-        message:
-          type: string
-        status:
-          type: string
     requestRegister:
       type: object
       required:
@@ -148,15 +230,6 @@ components:
           type: string
         status:
           type: string
-    failedResponseRegister:
-      type: object
-      properties:
-        code:
-          type: number
-        message:
-          type: string
-        status:
-          type: string
     requestPostType:
       type: object
       required:
@@ -166,20 +239,6 @@ components:
         category:
           type: string
         type:
-          type: string
-    responsePostType:
-      type: object
-      properties:
-        category:
-          type: string
-        type:
-          type: string
-    failedPostType:
-      type: object
-      properties:
-        code:
-          type: number
-        message:
           type: string
     requestPosting:
       type: object
@@ -192,13 +251,6 @@ components:
           type: string
         post_type_id:
           type: number
-    failedPosting:
-      type: object
-      properties:
-        code:
-          type: number
-        message:
-          type: string
     responseWithData:
       type: object
       properties:
@@ -210,13 +262,6 @@ components:
           type: string
         data:
           type: object
-    failedResponse:
-      type: object
-      properties:
-        code:
-          type: number
-        message:
-          type: string
     responseWithNoData:
       type: object
       properties:
@@ -331,7 +376,7 @@ components:
           schema:
             $ref: "#/components/schemas/responseRegisterSuccess"
           examples:
-            responseData:
+            responseRegisterSuccess:
               description: response success
               value:
                 code: 201
@@ -351,6 +396,94 @@ components:
               $ref: "#/components/examples/invalidPassword"
             All Data Not Filled:
               $ref: "#/components/examples/allDataNotFilled"
+    postTypeResponseSuccess:
+      description: insert post type success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          examples:
+            responsePostType:
+              description: response success
+              value:
+                code: 201
+                message: success insert post type
+    postTypeResponseFailed:
+      description: insert post type failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          examples:
+            responsePostType:
+              description: response failed
+              value:
+                code: 400
+                message: insert post type failed
+    getPostTypeResponseSuccess:
+      description: get post type success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithData"
+          examples:
+            responseGetPostTypeSuccess:
+              description: response success
+              value:
+                code: 200
+                message: success get data
+                data:
+                  - category_id: 1
+                    category: Opini
+                    type: Artikel
+    getPostTypeResponseFailed:
+      description: get post type failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          examples:
+            responseGetPostTypeFailed:
+              description: response failed
+              value:
+                code: 400
+                message: get post type failed
+    putPostTypeResponseSuccess:
+      description: update posting success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            code: 200
+            message: update posting success
+    putPostTypeResponseFailed:
+      description: update posting failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            code: 400
+            message: update posting failed
+    deletePostTypeResponseSuccess:
+      description: delete posting success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            code: 200
+            message: delete posting success
+    deletePostTypeResponseFailed:
+      description: delete posting failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            code: 400
+            message: delete posting failed
     postingResponseSuccess:
       description: posting success
       content:
@@ -363,8 +496,17 @@ components:
               value:
                 code: 201
                 message: posting success
+    postingResponseFailed:
+      description: posting failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            code: 400
+            message: insert posting failed
     getPostingResponses:
-      description: get posting
+      description: get posting success
       content:
         application/json:
           schema:
@@ -385,15 +527,52 @@ components:
                   post_type:
                     category: Opini
                     type: Artikel
-    postingResponseFailed:
-      description: posting failed
+    getPostingResponsesFailed:
+      description: get posting failed
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/responseWithNoData"
           example:
             code: 400
-            message: failed insert posting
+            message: get posting failed
+    putPostingResponseSuccess:
+      description: update posting success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            code: 200
+            message: update posting success
+    putPostingResponseFailed:
+      description: update posting failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            code: 400
+            message: update posting failed
+    deletePostingResponseSuccess:
+      description: delete posting success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            code: 200
+            message: delete posting success
+    deletePostingResponseFailed:
+      description: delete posting failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            code: 400
+            message: delete posting failed
+
   #############################
   #         EXAMPLES          #
   #############################
@@ -423,3 +602,21 @@ components:
       value:
         code: 400
         message: all data must be filled
+  #############################
+  #        PARAMETERS         #
+  #############################
+  parameters:
+    post_id:
+      in: path
+      name: post_id
+      required: true
+      schema:
+        type: number
+        example: 1
+    post_type_id:
+      in: path
+      name: post_type_id
+      required: true
+      schema:
+        type: number
+        example: 1

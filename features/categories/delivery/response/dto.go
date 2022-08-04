@@ -3,7 +3,7 @@ package response
 import "news/features/categories"
 
 type PostType struct {
-	ID       int    `json:"category_id"`
+	ID       int    `json:"post_type_id"`
 	Category string `json:"category"`
 	Type     string `json:"type"`
 }
