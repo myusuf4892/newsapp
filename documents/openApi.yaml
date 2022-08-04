@@ -22,7 +22,7 @@ paths:
     post:
       tags:
         - Login
-      summary: Login user
+      summary: Login User
       description: login user description
       requestBody:
         $ref: "#/components/requestBodies/loginRequestBody"
@@ -38,7 +38,7 @@ paths:
     post:
       tags:
         - Register
-      summary: Register user
+      summary: Register User
       description: register user description
       requestBody:
         $ref: "#/components/requestBodies/registerRequestBody"
@@ -47,6 +47,34 @@ paths:
           $ref: "#/components/responses/registerResponseSuccess"
         "400":
           $ref: "#/components/responses/registerResponseFailed"
+  #############################
+  #           POST            #
+  #############################
+  /posts:
+    post:
+      tags:
+        - Post
+      summary: Posting Article
+      description: posting by user
+      security:
+        - JWTAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/postingRequestBody"
+      responses:
+        "201":
+          $ref: "#/components/responses/postingResponseSuccess"
+        "400":
+          $ref: "#/components/responses/postingResponseFailed"
+    get:
+      tags:
+        - Post
+      summary: Get Articles
+      description: get posting
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/getPostingResponses"
 #############################
 #        COMPONENTS         #
 #############################
@@ -129,6 +157,48 @@ components:
           type: string
         status:
           type: string
+    requestPostType:
+      type: object
+      required:
+        - category
+        - type
+      properties:
+        category:
+          type: string
+        type:
+          type: string
+    responsePostType:
+      type: object
+      properties:
+        category:
+          type: string
+        type:
+          type: string
+    failedPostType:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+    requestPosting:
+      type: object
+      required:
+        - post_type_id
+      properties:
+        tittle:
+          type: string
+        description:
+          type: string
+        post_type_id:
+          type: number
+    failedPosting:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
     responseWithData:
       type: object
       properties:
@@ -187,7 +257,35 @@ components:
         multipart/form-data:
           schema:
             $ref: "#/components/schemas/requestRegister"
-
+    postingRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestPosting"
+          examples:
+            postingData:
+              description: data posting article
+              value:
+                tittle: Kita bisa
+                description: Indonesia bisa maju
+                post_type_id: 1
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/requestPosting"
+    postTypeRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestPostType"
+          examples:
+            postTypeData:
+              description: data post type
+              value:
+                category: Opini
+                type: Artikel
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/requestPostType"
   #############################
   #         RESPONSES         #
   #############################
@@ -203,10 +301,10 @@ components:
               description: response success
               value:
                 code: 200
-                message: Login Success
+                message: login success
                 data:
-                  id: 1
-                  role: user
+                  user_id: 1
+                  full_name: muhamad yusup
                   token: >-
                     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co
     loginResponseFailed:
@@ -215,9 +313,17 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/responseWithNoData"
-          example:
-            Code: 400
-            Message: Email or Password Incorrect
+          examples:
+            responseFailedGetData:
+              description: response failed
+              value:
+                code: 400
+                message: email or password incorrect
+            responseFailedServer:
+              description: response failed
+              value:
+                code: 500
+                message: error server
     registerResponseSuccess:
       description: register success
       content:
@@ -228,8 +334,8 @@ components:
             responseData:
               description: response success
               value:
-                code: 200
-                message: Register Success
+                code: 201
+                message: register success
     registerResponseFailed:
       description: register failed
       content:
@@ -245,7 +351,49 @@ components:
               $ref: "#/components/examples/invalidPassword"
             All Data Not Filled:
               $ref: "#/components/examples/allDataNotFilled"
-
+    postingResponseSuccess:
+      description: posting success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          examples:
+            responseData:
+              description: response success
+              value:
+                code: 201
+                message: posting success
+    getPostingResponses:
+      description: get posting
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithData"
+          examples:
+            responseData:
+              description: response success
+              value:
+                code: 200
+                message: success get data posting
+                data:
+                  tittle: Kita bisa
+                  description: Indonesia bisa maju
+                  post_type_id: 1
+                  user_id: 1
+                  user:
+                    author: muhamad yusup
+                  post_type:
+                    category: Opini
+                    type: Artikel
+    postingResponseFailed:
+      description: posting failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseWithNoData"
+          example:
+            code: 400
+            message: failed insert posting
   #############################
   #         EXAMPLES          #
   #############################
