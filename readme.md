@@ -8,11 +8,7 @@ News app can posting articles for media.
 
 Features in News App :
 
-<div>
-
-    `<details>`
-
-<summary>USERS</summary>
+### <summary>USERS</summary>
 
 <!---
 
@@ -28,7 +24,7 @@ At users, there are features for login either user or admin, we also make CRUD f
 <details>
 | Feature User | Endpoint | Param | JWT Token | Function |
 
-| --- | --- | --- | --- | --- |
+| ------------ | -------- | ----- | --------- | -------- |
 
 | POST | /register  | - | NO | new account registration |
 
@@ -37,7 +33,9 @@ At users, there are features for login either user or admin, we also make CRUD f
 </details>
 </div>
 
-<summary>POSTS</summary>
+<br>
+
+### <summary>POSTS</summary>
 
 <!---
 
@@ -46,22 +44,35 @@ At users, there are features for login either user or admin, we also make CRUD f
 | --- | --- |
 
   --->
+
+At posts, we can be posting articles by user. so, you must be register and login, before posting article.
+
 <div>
 <details>
 | Feature Post | Endpoint | Param | JWT Token | Function |
-| --- | --- | --- | --- | --- |
+
+| ------------ | -------- | ----- | --------- | -------- |
+
 | POST | /posts | - | YES | create posting |
+
 | GET | /posts | - | YES | get posts |
+
 | PUT | /posts/id | id: post_id | YES | update post |
+
 | DELETE | /posts/id | id: post_id | YES | delete post |
+
 | POST | /posts/categories | - | YES | create post type |
+
 | GET | /posts/categories | - | YES | get post type |
+
 | PUT | /posts/categories/id | id: post_type_id | YES | update post type |
+
 | DELETE | /posts/categories/id | id: post_type_id | YES | delete post type |
 
 </details>
 </div>
-</div>
+
+<br>
 
 ### 🛠 &nbsp;Build App & Database
 
@@ -81,7 +92,7 @@ At users, there are features for login either user or admin, we also make CRUD f
 
 ## 🗃️ ERD
 
-<imgsrc="./documents/news.jpg">
+![ERD](./documents/news.jpg)
 
 ## Run Locally
 
