@@ -36,6 +36,6 @@ func fromCore(dataUser users.Core) User {
 	}
 }
 
-func toCore(dataUser User) users.Core {
-	return dataUser.toCore()
-}
+// func toCore(dataUser User) users.Core {
+// 	return dataUser.toCore()
+// }
