@@ -36,10 +36,10 @@ func (_m *UserData) FindUser(email string) (response users.Core, err error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string) error); ok {
+	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(email)
 	} else {
-		r1 = ret.Error(0)
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1

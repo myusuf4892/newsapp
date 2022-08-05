@@ -21,20 +21,22 @@ func TestAddPost(t *testing.T) {
 	}
 
 	t.Run("Test Posting Success", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(nil).Once()
+		repo.On("Insert", mock.Anything).Return(1, nil).Once()
 		srv := NewPostBusiness(repo)
 
-		err := srv.AddPost(dataReq)
+		row, err := srv.AddPost(dataReq)
 		assert.Nil(t, err)
+		assert.Equal(t, 1, row)
 		repo.AssertExpectations(t)
 	})
 
 	t.Run("Test Posting Failed", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(errors.New("failed to insert Post")).Once()
+		repo.On("Insert", mock.Anything).Return(0, errors.New("failed to insert Post")).Once()
 		srv := NewPostBusiness(repo)
 
-		err := srv.AddPost(dataReq)
+		row, err := srv.AddPost(dataReq)
 		assert.NotNil(t, err)
+		assert.Equal(t, 0, row)
 	})
 }
 
@@ -95,20 +97,22 @@ func TestUpdatePost(t *testing.T) {
 	ID := 1
 
 	t.Run("Test Update Post Success", func(t *testing.T) {
-		repo.On("Update", dataReq, ID).Return(nil).Once()
+		repo.On("Update", dataReq, ID).Return(1, nil).Once()
 		srv := NewPostBusiness(repo)
 
-		err := srv.UpdatePost(dataReq, ID)
+		row, err := srv.UpdatePost(dataReq, ID)
 		assert.Nil(t, err)
+		assert.Equal(t, 1, row)
 		repo.AssertExpectations(t)
 	})
 
 	t.Run("Test Update Post Failed", func(t *testing.T) {
-		repo.On("Update", dataReq, ID).Return(errors.New("failed to insert post")).Once()
+		repo.On("Update", dataReq, ID).Return(0, errors.New("failed to insert post")).Once()
 		srv := NewPostBusiness(repo)
 
-		err := srv.UpdatePost(dataReq, ID)
+		row, err := srv.UpdatePost(dataReq, ID)
 		assert.NotNil(t, err)
+		assert.Equal(t, 0, row)
 	})
 }
 
@@ -117,19 +121,21 @@ func TestDestroyPost(t *testing.T) {
 	ID := 1
 
 	t.Run("Test Delete Post Success", func(t *testing.T) {
-		repo.On("Destroy", mock.Anything).Return(nil).Once()
+		repo.On("Destroy", mock.Anything).Return(1, nil).Once()
 		srv := NewPostBusiness(repo)
 
-		err := srv.DestroyPost(ID)
+		row, err := srv.DestroyPost(ID)
 		assert.Nil(t, err)
+		assert.Equal(t, 1, row)
 		repo.AssertExpectations(t)
 	})
 
 	t.Run("Test Delete Post Failed", func(t *testing.T) {
-		repo.On("Destroy", mock.Anything).Return(errors.New("failed delete post")).Once()
+		repo.On("Destroy", mock.Anything).Return(0, errors.New("failed delete post")).Once()
 		srv := NewPostBusiness(repo)
 
-		err := srv.DestroyPost(ID)
+		row, err := srv.DestroyPost(ID)
 		assert.NotNil(t, err)
+		assert.Equal(t, 0, row)
 	})
 }

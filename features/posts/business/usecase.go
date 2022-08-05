@@ -15,37 +15,47 @@ func NewPostBusiness(dataPost posts.Data) posts.Business {
 	}
 }
 
-func (uc *postUseCase) AddPost(dataReq posts.Core) (err error) {
-	res := uc.postData.Insert(dataReq)
-	if res != nil {
-		return errors.New("error server")
+func (uc *postUseCase) AddPost(dataReq posts.Core) (row int, err error) {
+	if dataReq.Tittle == "" || dataReq.Description == "" {
+		return 0, errors.New("all must be filled")
 	}
-	return res
+	res, err := uc.postData.Insert(dataReq)
+	if err != nil {
+		return 0, errors.New("error server")
+	}
+	if res == 0 {
+		return 0, err
+	}
+	return res, nil
 }
 
 func (uc *postUseCase) GetPost() (response []posts.Core, err error) {
 	res, err := uc.postData.Get()
 	if err != nil {
-		return nil, errors.New("error server")
+		return nil, err
 	}
 
 	return res, nil
 }
 
-func (uc *postUseCase) UpdatePost(dataReq posts.Core, ID int) (err error) {
-	res := uc.postData.Update(dataReq, ID)
-	if res != nil {
-		return errors.New("error server")
+func (uc *postUseCase) UpdatePost(dataReq posts.Core, ID int) (row int, err error) {
+	res, err := uc.postData.Update(dataReq, ID)
+	if err != nil {
+		return 0, errors.New("error server")
 	}
-
-	return nil
+	if res == 0 {
+		return 0, err
+	}
+	return res, nil
 }
 
-func (uc *postUseCase) DestroyPost(ID int) (err error) {
-	res := uc.postData.Destroy(ID)
-	if res != nil {
-		return errors.New("error server")
+func (uc *postUseCase) DestroyPost(ID int) (row int, err error) {
+	res, err := uc.postData.Destroy(ID)
+	if err != nil {
+		return 0, errors.New("error server")
 	}
-
-	return nil
+	if res == 0 {
+		return 0, err
+	}
+	return res, nil
 }

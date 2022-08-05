@@ -17,14 +17,14 @@ func NewPostRepository(conn *gorm.DB) posts.Data {
 	}
 }
 
-func (repo *mysqlPostRepository) Insert(dataReq posts.Core) (err error) {
+func (repo *mysqlPostRepository) Insert(dataReq posts.Core) (row int, err error) {
 	data := fromCore(&dataReq)
 
 	srv := repo.db.Create(&data)
 	if srv.Error != nil {
-		return errors.New("error server")
+		return int(srv.RowsAffected), errors.New("error server")
 	}
-	return nil
+	return int(srv.RowsAffected), srv.Error
 }
 
 func (repo *mysqlPostRepository) Get() (response []posts.Core, err error) {
@@ -32,7 +32,7 @@ func (repo *mysqlPostRepository) Get() (response []posts.Core, err error) {
 
 	srv := repo.db.Preload("PostType").Preload("User").Find(&data)
 	if srv.Error != nil {
-		return []posts.Core{}, errors.New("no data post type")
+		return []posts.Core{}, srv.Error
 	}
 
 	response = ToCoreList(data)
@@ -40,9 +40,10 @@ func (repo *mysqlPostRepository) Get() (response []posts.Core, err error) {
 	return response, nil
 }
 
-func (repo *mysqlPostRepository) Update(dataReq posts.Core, ID int) (err error) {
+func (repo *mysqlPostRepository) Update(dataReq posts.Core, ID int) (row int, err error) {
 	Model := Post{}
 	Model.ID = uint(ID)
+
 	srv := repo.db.Model(&Model).Updates(&Post{
 		Tittle:      dataReq.Tittle,
 		Description: dataReq.Description,
@@ -50,18 +51,19 @@ func (repo *mysqlPostRepository) Update(dataReq posts.Core, ID int) (err error) 
 		UserID:      dataReq.UserID,
 	})
 	if srv.Error != nil {
-		return errors.New("error server")
+		return int(srv.RowsAffected), errors.New("error server")
 	}
 
-	return nil
+	return int(srv.RowsAffected), srv.Error
 }
 
-func (repo *mysqlPostRepository) Destroy(ID int) (err error) {
+func (repo *mysqlPostRepository) Destroy(ID int) (row int, err error) {
 	Model := Post{}
+
 	srv := repo.db.Delete(&Model, ID)
 	if srv.Error != nil {
-		return errors.New("error server")
+		return int(srv.RowsAffected), errors.New("error server")
 	}
 
-	return nil
+	return int(srv.RowsAffected), srv.Error
 }

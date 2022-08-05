@@ -51,7 +51,7 @@ func (_m *UserUseCase) Auth(dataUser users.Core) (token, fullName string, userID
 	if rf, ok := ret.Get(3).(func(users.Core) error); ok {
 		r3 = rf(dataUser)
 	} else {
-		r3 = ret.Error(0)
+		r3 = ret.Error(3)
 	}
 
 	return r0, r1, r2, r3

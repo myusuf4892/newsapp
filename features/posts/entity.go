@@ -28,15 +28,15 @@ type User struct {
 }
 
 type Business interface {
-	AddPost(dataPost Core) (err error)
+	AddPost(dataPost Core) (row int, err error)
 	GetPost() (dataPost []Core, err error)
-	UpdatePost(dataPost Core, ID int) (err error)
-	DestroyPost(ID int) (err error)
+	UpdatePost(dataPost Core, ID int) (row int, err error)
+	DestroyPost(ID int) (row int, err error)
 }
 
 type Data interface {
-	Insert(dataPost Core) (err error)
+	Insert(dataPost Core) (row int, err error)
 	Get() (dataPost []Core, err error)
-	Update(dataPost Core, ID int) (err error)
-	Destroy(ID int) (err error)
+	Update(dataPost Core, ID int) (row int, err error)
+	Destroy(ID int) (row int, err error)
 }

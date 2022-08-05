@@ -23,7 +23,7 @@ func (h *UserHandler) Create(c echo.Context) error {
 	dataReq := _request.User{}
 	bind := c.Bind(&dataReq)
 	if bind != nil {
-		c.JSON(_helper.ResponseBadRequest("check your input data"))
+		return c.JSON(_helper.ResponseBadRequest("check your input data"))
 	}
 
 	dataCore := _request.ToCore(dataReq)
@@ -39,7 +39,7 @@ func (h *UserHandler) Login(c echo.Context) error {
 	dataReq := _request.User{}
 	errBind := c.Bind(&dataReq)
 	if errBind != nil {
-		c.JSON(_helper.ResponseBadRequest("check your input data"))
+		return c.JSON(_helper.ResponseBadRequest("check your input data"))
 	}
 
 	dataCore := _request.ToCore(dataReq)

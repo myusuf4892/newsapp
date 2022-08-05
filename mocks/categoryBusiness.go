@@ -1,27 +1,27 @@
 package mocks
 
 import (
-	"news/features/posts"
+	"news/features/categories"
 
 	"github.com/stretchr/testify/mock"
 )
 
-type PostUseCase struct {
+type CategoryUseCase struct {
 	mock.Mock
 }
 
-func (_m *PostUseCase) AddPost(dataPost posts.Core) (row int, err error) {
+func (_m *CategoryUseCase) AddPost(dataPost categories.Core) (row int, err error) {
 	ret := _m.Called(dataPost)
 
 	var r0 int
-	if rf, ok := ret.Get(0).(func(posts.Core) int); ok {
+	if rf, ok := ret.Get(0).(func(categories.Core) int); ok {
 		r0 = rf(dataPost)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(posts.Core) error); ok {
+	if rf, ok := ret.Get(1).(func(categories.Core) error); ok {
 		r1 = rf(dataPost)
 	} else {
 		r1 = ret.Error(1)
@@ -30,14 +30,14 @@ func (_m *PostUseCase) AddPost(dataPost posts.Core) (row int, err error) {
 	return r0, r1
 }
 
-func (_m *PostUseCase) GetPost() (dataPost []posts.Core, err error) {
+func (_m *CategoryUseCase) GetPost() (dataPost []categories.Core, err error) {
 	ret := _m.Called()
 
-	var r0 []posts.Core
-	if rf, ok := ret.Get(0).(func() []posts.Core); ok {
+	var r0 []categories.Core
+	if rf, ok := ret.Get(0).(func() []categories.Core); ok {
 		r0 = rf()
 	} else {
-		r0 = ret.Get(0).([]posts.Core)
+		r0 = ret.Get(0).([]categories.Core)
 	}
 
 	var r1 error
@@ -50,18 +50,18 @@ func (_m *PostUseCase) GetPost() (dataPost []posts.Core, err error) {
 	return r0, r1
 }
 
-func (_m *PostUseCase) UpdatePost(dataPost posts.Core, ID int) (row int, err error) {
+func (_m *CategoryUseCase) UpdatePost(dataPost categories.Core, ID int) (row int, err error) {
 	ret := _m.Called(dataPost, ID)
 
 	var r0 int
-	if rf, ok := ret.Get(0).(func(posts.Core, int) int); ok {
+	if rf, ok := ret.Get(0).(func(categories.Core, int) int); ok {
 		r0 = rf(dataPost, ID)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(posts.Core, int) error); ok {
+	if rf, ok := ret.Get(1).(func(categories.Core, int) error); ok {
 		r1 = rf(dataPost, ID)
 	} else {
 		r1 = ret.Error(1)
@@ -70,7 +70,7 @@ func (_m *PostUseCase) UpdatePost(dataPost posts.Core, ID int) (row int, err err
 	return r0, r1
 }
 
-func (_m *PostUseCase) DestroyPost(ID int) (row int, err error) {
+func (_m *CategoryUseCase) DestroyPost(ID int) (row int, err error) {
 	ret := _m.Called(ID)
 
 	var r0 int

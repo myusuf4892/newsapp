@@ -31,9 +31,9 @@ func (repo *mysqlUserRepository) Insert(dataReq users.Core) (err error) {
 		if newError["Number"] == float64(1062) {
 			return errors.New("email already used")
 		}
-		return errors.New("error server")
+		return srv.Error
 	}
-	return nil
+	return srv.Error
 }
 
 func (repo *mysqlUserRepository) FindUser(email string) (response users.Core, err error) {
@@ -42,5 +42,5 @@ func (repo *mysqlUserRepository) FindUser(email string) (response users.Core, er
 	if srv.Error != nil {
 		return users.Core{}, errors.New("no data user")
 	}
-	return dataUser.toCore(), nil
+	return dataUser.toCore(), srv.Error
 }

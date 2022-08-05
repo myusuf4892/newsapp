@@ -17,14 +17,14 @@ func NewCategoryRepository(conn *gorm.DB) categories.Data {
 	}
 }
 
-func (repo *mysqlCategoryRepository) Insert(dataCategory categories.Core) (err error) {
+func (repo *mysqlCategoryRepository) Insert(dataCategory categories.Core) (row int, err error) {
 	data := fromPostType(&dataCategory)
 
 	srv := repo.db.Create(&data)
 	if srv.Error != nil {
-		return errors.New("error server")
+		return int(srv.RowsAffected), errors.New("error server")
 	}
-	return nil
+	return int(srv.RowsAffected), srv.Error
 }
 
 func (repo *mysqlCategoryRepository) Get() (response []categories.Core, err error) {
@@ -37,10 +37,10 @@ func (repo *mysqlCategoryRepository) Get() (response []categories.Core, err erro
 
 	response = ToCoreList(data)
 
-	return response, nil
+	return response, srv.Error
 }
 
-func (repo *mysqlCategoryRepository) Update(dataReq categories.Core, ID int) (err error) {
+func (repo *mysqlCategoryRepository) Update(dataReq categories.Core, ID int) (row int, err error) {
 	Model := PostType{}
 	Model.ID = uint(ID)
 	srv := repo.db.Model(&Model).Updates(&PostType{
@@ -48,18 +48,18 @@ func (repo *mysqlCategoryRepository) Update(dataReq categories.Core, ID int) (er
 		Type:     dataReq.Type,
 	})
 	if srv.Error != nil {
-		return errors.New("error server")
+		return int(srv.RowsAffected), errors.New("error server")
 	}
 
-	return nil
+	return int(srv.RowsAffected), srv.Error
 }
 
-func (repo *mysqlCategoryRepository) Destroy(ID int) (err error) {
+func (repo *mysqlCategoryRepository) Destroy(ID int) (row int, err error) {
 	Model := PostType{}
 	srv := repo.db.Delete(&Model, ID)
 	if srv.Error != nil {
-		return errors.New("error server")
+		return int(srv.RowsAffected), errors.New("error server")
 	}
 
-	return nil
+	return int(srv.RowsAffected), srv.Error
 }

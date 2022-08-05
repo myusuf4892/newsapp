@@ -31,7 +31,7 @@ func (h *PostHandler) Create(c echo.Context) error {
 	dataReq := _request.Post{}
 	errBind := c.Bind(&dataReq)
 	if errBind != nil {
-		c.JSON(_helper.ResponseBadRequest("check your input data"))
+		return c.JSON(_helper.ResponseBadRequest("check your input data"))
 	}
 
 	dataCore := _request.ToCore(dataReq)
@@ -39,9 +39,12 @@ func (h *PostHandler) Create(c echo.Context) error {
 
 	fmt.Println(dataCore.PostType)
 
-	response := h.postBusiness.AddPost(dataCore)
-	if response != nil {
-		c.JSON(_helper.ResponseBadRequest("failed insert data post"))
+	row, err := h.postBusiness.AddPost(dataCore)
+	if err != nil {
+		return c.JSON(_helper.ResponseInternalServerError(err.Error()))
+	}
+	if row == 0 {
+		return c.JSON(_helper.ResponseBadRequest("insert post failed"))
 	}
 	return c.JSON(_helper.ResponseCreateSuccess("success insert data post"))
 }
@@ -49,7 +52,7 @@ func (h *PostHandler) Create(c echo.Context) error {
 func (h *PostHandler) Get(c echo.Context) error {
 	response, err := h.postBusiness.GetPost()
 	if err != nil {
-		c.JSON(_helper.ResponseBadRequest("failed get data post"))
+		return c.JSON(_helper.ResponseBadRequest("failed get data post"))
 	}
 
 	result := _response.FromCoreToList(response)
@@ -70,15 +73,18 @@ func (h *PostHandler) Update(c echo.Context) error {
 	dataReq := _request.Post{}
 	errBind := c.Bind(&dataReq)
 	if errBind != nil {
-		c.JSON(_helper.ResponseBadRequest("check your input data"))
+		return c.JSON(_helper.ResponseBadRequest("check your input data"))
 	}
 
 	dataCore := _request.ToCore(dataReq)
 	dataCore.UserID = tokenUserID
 
-	response := h.postBusiness.UpdatePost(dataCore, categoryID)
-	if response != nil {
-		c.JSON(_helper.ResponseBadRequest("failed update data post"))
+	row, err := h.postBusiness.UpdatePost(dataCore, categoryID)
+	if err != nil {
+		return c.JSON(_helper.ResponseInternalServerError(err.Error()))
+	}
+	if row == 0 {
+		return c.JSON(_helper.ResponseBadRequest("no data, update post failed"))
 	}
 	return c.JSON(_helper.ResponseStatusOkNoData("success update data post"))
 }
@@ -89,9 +95,12 @@ func (h *PostHandler) Destroy(c echo.Context) error {
 		return c.JSON(_helper.ResponseBadRequest("error parameter"))
 	}
 
-	response := h.postBusiness.DestroyPost(categoryID)
-	if response != nil {
-		c.JSON(_helper.ResponseBadRequest("failed delete data post"))
+	row, err := h.postBusiness.DestroyPost(categoryID)
+	if err != nil {
+		return c.JSON(_helper.ResponseInternalServerError(err.Error()))
+	}
+	if row == 0 {
+		return c.JSON(_helper.ResponseBadRequest("no data, delete post failed"))
 	}
 	return c.JSON(_helper.ResponseStatusOkNoData("success delete data post"))
 }
